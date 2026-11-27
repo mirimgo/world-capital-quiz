@@ -90,7 +90,37 @@ def load_default_quizzes():
         make_capital_quiz(country, answer, wrong_answers)
         for country, answer, wrong_answers in FALLBACK_DATA
     ]
-    
+
+# 퀴즈 풀기 (푼 점수를 반환)
+def play_quiz(quizzes):
+    if not quizzes:
+        print("\n등록된 퀴즈가 없습니다.")
+        return None
+
+    score = 0
+    total = len(quizzes)
+
+    print("\n모를 '수도' 있지! 🌎 세계 수도 퀴즈!")
+    print(f"총 {total}개의 문제가 준비되어 있습니다.")
+
+    for quiz in quizzes:
+        quiz.show_question()
+        number = read_number("정답 번호를 입력하세요 (1~4): ", 1, 4)
+
+        if quiz.check_answer(number):
+            print("정답입니다! 🎉")
+            score += 1
+        else:
+            print(f"아쉽네요! 정답은 {quiz.get_answer_text()}입니다.")
+
+    accuracy = score / total * 100
+
+    print("\n퀴즈가 종료되었습니다!")
+    print(f"최종 점수: {score} / {total}")
+    print(f"정답률: {accuracy:.1f}%")
+
+    return score
+
 # 메뉴 출력
 def show_menu():
     print("\n================================")
@@ -105,12 +135,14 @@ def show_menu():
 
 # 메인 루프
 def main():
+    quizzes = load_default_quizzes()
+
     while True:
         show_menu()
         choice = read_number("\n메뉴를 선택하세요: ", 1, 5)
 
         if choice == 1:
-            print("\n[퀴즈 풀기] 준비 중입니다.")
+            play_quiz(quizzes)
         elif choice == 2:
             print("\n[퀴즈 추가하기] 준비 중입니다.")
         elif choice == 3:

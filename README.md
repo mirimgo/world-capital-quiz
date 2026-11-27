@@ -142,6 +142,7 @@ world-capital-quiz/
 | 10 | Refactor: QuizGame 클래스로 구조 정리 |
 | 11 | Feat: state.json 저장/불러오기와 예외 처리 구현 |
 | 12 | Docs: README 작성 |
+| 13 | Docs: clone 실습으로 README에 한 줄 추가 |
 
 **사용한 Git 명령어:** `init`, `add`, `commit`, `push`, `checkout`, `merge`, `pull`, `clone`
 > clone/pull 실습: 복제한 저장소에서 추가한 줄입니다.

@@ -22,6 +22,16 @@ def read_number(prompt, min_value, max_value):
 
         return number
 
+# 문자열 입력 공통 처리 (공백 제거, 빈 입력 불가)
+def read_text(prompt):
+    while True:
+        text = input(prompt).strip()
+
+        if text:
+            return text
+
+        print("입력이 비어 있습니다. 다시 입력해주세요.")
+
 # 퀴즈 클래스
 class Quiz:
     def __init__(self, question, choices, answer):
@@ -91,6 +101,30 @@ def load_default_quizzes():
         for country, answer, wrong_answers in FALLBACK_DATA
     ]
 
+# 퀴즈 추가
+def add_quiz(quizzes):
+    print("\n[퀴즈 추가하기]")
+
+    question = read_text("문제를 입력하세요: ")
+
+    choices = []
+
+    for i in range(4):
+        while True:
+            choice = read_text(f"{i + 1}번 선택지를 입력하세요: ")
+
+            if choice in choices:
+                print("이미 입력한 선택지입니다.")
+            else:
+                choices.append(choice)
+                break
+
+    answer_number = read_number("정답 번호를 입력하세요 (1~4): ", 1, 4)
+
+    quizzes.append(Quiz(question, choices, answer_number))
+
+    print("퀴즈가 성공적으로 추가되었습니다!")
+
 # 퀴즈 풀기 (푼 점수를 반환)
 def play_quiz(quizzes):
     if not quizzes:
@@ -144,7 +178,7 @@ def main():
         if choice == 1:
             play_quiz(quizzes)
         elif choice == 2:
-            print("\n[퀴즈 추가하기] 준비 중입니다.")
+            add_quiz(quizzes)
         elif choice == 3:
             print("\n[퀴즈 목록] 준비 중입니다.")
         elif choice == 4:

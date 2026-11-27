@@ -166,6 +166,24 @@ def show_quizzes(quizzes):
     for i, quiz in enumerate(quizzes, start=1):
         print(f"{i}. {quiz.question}")
 
+# 최고 점수 갱신 (더 높은 점수면 새 점수를 반환)
+def update_best_score(best_score, score):
+    if best_score is None or score > best_score:
+        print("🎉 새로운 최고 점수를 달성했습니다!")
+        return score
+
+    return best_score
+
+
+# 최고 점수 확인
+def show_score(best_score):
+    print("\n[최고 점수]")
+
+    if best_score is None:
+        print("아직 퀴즈를 풀지 않았습니다.")
+    else:
+        print(f"최고 점수: {best_score}점")
+
 # 메뉴 출력
 def show_menu():
     print("\n================================")
@@ -181,19 +199,23 @@ def show_menu():
 # 메인 루프
 def main():
     quizzes = load_default_quizzes()
+    best_score = None
 
     while True:
         show_menu()
         choice = read_number("\n메뉴를 선택하세요: ", 1, 5)
 
         if choice == 1:
-            play_quiz(quizzes)
+            score = play_quiz(quizzes)
+
+            if score is not None:
+                best_score = update_best_score(best_score, score)
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
             show_quizzes(quizzes)
         elif choice == 4:
-            print("\n[점수 확인] 준비 중입니다.")
+            show_score(best_score)
         elif choice == 5:
             print("\n프로그램을 종료합니다. 감사합니다!")
             break

@@ -144,3 +144,4 @@ world-capital-quiz/
 | 12 | Docs: README 작성 |
 
 **사용한 Git 명령어:** `init`, `add`, `commit`, `push`, `checkout`, `merge`, `pull`, `clone`
+> clone/pull 실습: 복제한 저장소에서 추가한 줄입니다.

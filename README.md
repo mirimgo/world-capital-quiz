@@ -36,15 +36,16 @@ Python의 기본 문법과 객체 지향 프로그래밍을 활용하여 프로�
 
 - **Programming Language:** Python 3.14.4
 - **Development Tool:** Visual Studio Code
-- **Version Control:** Git, GitHub
+- **Version Control:** Git, GitHubg
 - **Data Storage:** JSON
 - **Library:** Python 표준 라이브러리 사용 (외부 라이브러리 사용하지 않음)
 <details>
-<summary>📸 개발 환경 설정 스크린샷 보기</summary>
+<summary>개발 환경 설정 스크린샷 보기</summary>
 
 ![개발 환경 설정](images/devsettings.png)
 
 </details>
+
 ## 4. 실행 방법
 
 1. Python 3.10 이상이 설치되어 있어야 합니다. (외부 라이브러리는 필요하지 않습니다.)
@@ -80,6 +81,31 @@ Windows에서는 `python main.py`로 실행합니다.
 - 빈 입력, 숫자가 아닌 입력, 허용 범위 밖의 숫자를 입력하면 안내 메시지를 출력하고 다시 입력받습니다.
 - 실행 중 Ctrl+C(`KeyboardInterrupt`)나 입력 스트림 종료(`EOFError`)가 발생해도 안내 메시지를 출력하고, 가능한 범위에서 저장한 뒤 안전하게 종료합니다.
 - `state.json`이 없으면 기본 퀴즈로 시작하고, 손상되었으면 안내 메시지를 출력한 뒤 기본 퀴즈로 복구합니다.
+
+### 실행 화면
+
+<details>
+<summary>📸 퀴즈 추가 화면 보기</summary>
+
+![퀴즈 추가](images/addquiz.png)
+
+</details>
+
+<details>
+<summary>퀴즈 풀기 화면 보기</summary>
+
+![퀴즈 풀기 1](images/solvequiz1.png)
+
+![퀴즈 풀기 2](images/solvequiz2.png)
+
+</details>
+
+<details>
+<summary>최고 점수 확인 화면 보기</summary>
+
+![최고 점수 확인](images/bestscore.png)
+
+</details>
 
 ## 6. 파일 구조
 
@@ -148,6 +174,13 @@ world-capital-quiz/
 | 11 | Feat: state.json 저장/불러오기와 예외 처리 구현 |
 | 12 | Docs: README 작성 |
 | 13 | Docs: clone 실습으로 README에 한 줄 추가 |
+
+<details>
+<summary>git log --oneline --graph 결과 보기</summary>
+
+![git log 결과](images/gitoneline.png)
+
+</details>
 
 **사용한 Git 명령어:** `init`, `add`, `commit`, `push`, `checkout`, `merge`, `pull`, `clone`
 > clone/pull 실습: 복제한 저장소에서 추가한 줄입니다.

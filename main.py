@@ -19,6 +19,27 @@ def read_number(prompt, min_value, max_value):
 
         return number
 
+# 퀴즈 클래스
+class Quiz:
+    def __init__(self, question, choices, answer):
+        self.question = question  # 문제
+        self.choices = choices    # 선택지 4개 (리스트)
+        self.answer = answer      # 정답 번호 (1~4)
+
+    # 문제와 선택지 출력
+    def show_question(self):
+        print(f"\n{self.question}")
+
+        for i, choice in enumerate(self.choices, start=1):
+            print(f"{i}. {choice}")
+
+    # 정답 확인 (선택한 번호가 정답이면 True)
+    def check_answer(self, choice_number):
+        return choice_number == self.answer
+
+    # 정답 선택지 글자 반환
+    def get_answer_text(self):
+        return self.choices[self.answer - 1]
 
 # 메뉴 출력
 def show_menu():

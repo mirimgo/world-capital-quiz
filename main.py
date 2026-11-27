@@ -155,6 +155,17 @@ def play_quiz(quizzes):
 
     return score
 
+# 퀴즈 목록 보기
+def show_quizzes(quizzes):
+    print("\n[등록된 퀴즈 목록]")
+
+    if not quizzes:
+        print("등록된 퀴즈가 없습니다.")
+        return
+
+    for i, quiz in enumerate(quizzes, start=1):
+        print(f"{i}. {quiz.question}")
+
 # 메뉴 출력
 def show_menu():
     print("\n================================")
@@ -180,7 +191,7 @@ def main():
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
-            print("\n[퀴즈 목록] 준비 중입니다.")
+            show_quizzes(quizzes)
         elif choice == 4:
             print("\n[점수 확인] 준비 중입니다.")
         elif choice == 5:

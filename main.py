@@ -1,3 +1,6 @@
+import json
+import random
+
 # 숫자 입력 공통 처리 (공백 제거, 빈 입력, 숫자 아님, 범위 밖 처리)
 def read_number(prompt, min_value, max_value):
     while True:
@@ -41,6 +44,53 @@ class Quiz:
     def get_answer_text(self):
         return self.choices[self.answer - 1]
 
+# JSON 파일을 읽지 못할 때 사용하는 기본 퀴즈 (나라, 정답 수도, 오답 3개)
+FALLBACK_DATA = [
+    ("대한민국", "서울", ["부산", "인천", "대전"]),
+    ("캐나다", "오타와", ["토론토", "밴쿠버", "몬트리올"]),
+    ("도미니카 공화국", "산토도밍고", ["산티아고", "푸에르토플라타", "라로마나"]),
+    ("아일랜드", "더블린", ["코크", "골웨이", "리머릭"]),
+    ("적도 기니", "시우다드데라파스", ["바타", "에비나용", "몽고모"]),
+]
+
+
+# 나라 이름과 정답/오답으로 Quiz 객체 만들기 (선택지는 섞고, 정답은 번호로 저장)
+def make_capital_quiz(country, answer, wrong_answers):
+    if len(wrong_answers) != 3:
+        raise ValueError("오답 선택지는 국가별로 3개여야 합니다.")
+
+    choices = list(wrong_answers) + [answer]
+    random.shuffle(choices)
+    answer_number = choices.index(answer) + 1
+
+    return Quiz(f"{country}의 수도는 어디일까요?", choices, answer_number)
+
+
+# 기본 퀴즈 불러오기 (JSON 파일 -> 실패하면 FALLBACK_DATA)
+def load_default_quizzes():
+    try:
+        with open("capitals.json", "r", encoding="utf-8") as file:
+            capitals = json.load(file)
+
+        with open("cities.json", "r", encoding="utf-8") as file:
+            cities = json.load(file)
+
+        quizzes = [
+            make_capital_quiz(country, answer, cities[country])
+            for country, answer in capitals.items()
+        ]
+
+        if quizzes:
+            return quizzes
+
+    except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        print("기본 퀴즈 파일을 읽지 못해 내장된 기본 퀴즈를 사용합니다.")
+
+    return [
+        make_capital_quiz(country, answer, wrong_answers)
+        for country, answer, wrong_answers in FALLBACK_DATA
+    ]
+    
 # 메뉴 출력
 def show_menu():
     print("\n================================")

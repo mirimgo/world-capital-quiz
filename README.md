@@ -178,7 +178,7 @@ world-capital-quiz/
 <details>
 <summary>git log --oneline --graph 결과 보기</summary>
 
-![git log 결과](images/gitoneline.png)
+![git log 결과](images/oneline.png)
 
 </details>
 

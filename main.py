@@ -1,5 +1,8 @@
 import json
+import os
 import random
+
+STATE_FILE = "state.json"  # 퀴즈와 최고 점수를 저장하는 파일
 
 
 # 숫자 입력 공통 처리 (공백 제거, 빈 입력, 숫자 아님, 범위 밖 처리)
@@ -57,6 +60,38 @@ class Quiz:
     def get_answer_text(self):
         return self.choices[self.answer - 1]
 
+    # 저장용 딕셔너리로 변환
+    def to_dict(self):
+        return {
+            "question": self.question,
+            "choices": self.choices,
+            "answer": self.answer,
+        }
+
+    # 딕셔너리에서 Quiz 객체 만들기 (형식이 이상하면 ValueError 발생)
+    @staticmethod
+    def from_dict(data):
+        question = data["question"]
+        choices = data["choices"]
+        answer = data["answer"]
+
+        if not isinstance(question, str) or not question.strip():
+            raise ValueError("문제 형식이 올바르지 않습니다.")
+
+        if not isinstance(choices, list) or len(choices) != 4:
+            raise ValueError("선택지는 4개여야 합니다.")
+
+        if not all(isinstance(choice, str) for choice in choices):
+            raise ValueError("선택지 형식이 올바르지 않습니다.")
+
+        if isinstance(answer, bool) or not isinstance(answer, int):
+            raise ValueError("정답 번호 형식이 올바르지 않습니다.")
+
+        if answer < 1 or answer > 4:
+            raise ValueError("정답 번호는 1~4 사이여야 합니다.")
+
+        return Quiz(question, choices, answer)
+
 
 # JSON 파일을 읽지 못할 때 사용하는 기본 퀴즈 (나라, 정답 수도, 오답 3개)
 FALLBACK_DATA = [
@@ -109,8 +144,65 @@ def load_default_quizzes():
 # 퀴즈 게임 관리 클래스
 class QuizGame:
     def __init__(self):
-        self.quizzes = load_default_quizzes()  # 퀴즈 목록
-        self.best_score = None                 # 최고 점수 (아직 안 풀었으면 None)
+        self.state_file = STATE_FILE  # 저장 파일 경로
+        self.quizzes = []             # 퀴즈 목록
+        self.best_score = None        # 최고 점수 (아직 안 풀었으면 None)
+
+        self.load_data()
+
+    # 기본 데이터로 초기화
+    def reset_to_default(self):
+        self.quizzes = load_default_quizzes()
+        self.best_score = None
+
+    # state.json 불러오기
+    def load_data(self):
+        # 파일이 없으면(첫 실행) 기본 퀴즈 사용
+        if not os.path.exists(self.state_file):
+            print("저장된 데이터가 없습니다. 기본 퀴즈를 불러옵니다.")
+            self.reset_to_default()
+            self.save_data()
+            return
+
+        try:
+            with open(self.state_file, "r", encoding="utf-8") as file:
+                data = json.load(file)
+
+            quizzes = [Quiz.from_dict(item) for item in data["quizzes"]]
+            best_score = data["best_score"]
+
+            if best_score is not None and (
+                isinstance(best_score, bool) or not isinstance(best_score, int)
+            ):
+                raise ValueError("최고 점수 형식이 올바르지 않습니다.")
+
+            self.quizzes = quizzes
+            self.best_score = best_score
+            print("저장된 데이터를 불러왔습니다.")
+
+        # 파일 내용이 손상된 경우 -> 기본 데이터로 복구
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            print("저장된 데이터가 손상되었습니다. 기본 데이터로 복구합니다.")
+            self.reset_to_default()
+            self.save_data()
+
+        # 파일을 읽을 수 없는 경우
+        except OSError as error:
+            print(f"파일을 읽는 중 오류가 발생했습니다: {error}")
+            self.reset_to_default()
+
+    # state.json 저장하기
+    def save_data(self):
+        data = {
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score,
+        }
+
+        try:
+            with open(self.state_file, "w", encoding="utf-8") as file:
+                json.dump(data, file, ensure_ascii=False, indent=4)
+        except OSError as error:
+            print(f"데이터 저장 중 오류가 발생했습니다: {error}")
 
     # 메뉴 출력
     def show_menu(self):
@@ -152,6 +244,7 @@ class QuizGame:
         print(f"정답률: {accuracy:.1f}%")
 
         self.update_best_score(score)
+        self.save_data()
 
     # 최고 점수 갱신
     def update_best_score(self, score):
@@ -180,6 +273,7 @@ class QuizGame:
         answer_number = read_number("정답 번호를 입력하세요 (1~4): ", 1, 4)
 
         self.quizzes.append(Quiz(question, choices, answer_number))
+        self.save_data()
 
         print("퀴즈가 성공적으로 추가되었습니다!")
 
@@ -218,14 +312,21 @@ class QuizGame:
             elif choice == 4:
                 self.show_score()
             elif choice == 5:
+                self.save_data()
                 print("\n프로그램을 종료합니다. 감사합니다!")
                 break
 
 
 # 프로그램 실행
 if __name__ == "__main__":
+    game = None
+
     try:
         game = QuizGame()
         game.run()
     except (KeyboardInterrupt, EOFError):
         print("\n프로그램이 중단되었습니다. 안전하게 종료합니다.")
+
+        if game is not None:
+            game.save_data()
+            print("저장 가능한 데이터를 저장했습니다.")

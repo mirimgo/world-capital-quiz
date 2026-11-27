@@ -39,7 +39,12 @@ Python의 기본 문법과 객체 지향 프로그래밍을 활용하여 프로�
 - **Version Control:** Git, GitHub
 - **Data Storage:** JSON
 - **Library:** Python 표준 라이브러리 사용 (외부 라이브러리 사용하지 않음)
+<details>
+<summary>📸 개발 환경 설정 스크린샷 보기</summary>
 
+![개발 환경 설정](images/devsettings.png)
+
+</details>
 ## 4. 실행 방법
 
 1. Python 3.10 이상이 설치되어 있어야 합니다. (외부 라이브러리는 필요하지 않습니다.)
